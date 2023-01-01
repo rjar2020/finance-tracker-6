@@ -5,7 +5,11 @@ class Stock < ApplicationRecord
       publishable_token: Rails.application.credentials.iex_client[:api_key],
       endpoint: Rails.application.credentials.iex_client[:api_url],
     )
-    quote =  client.quote(ticker_symbol)
-    new(ticker: ticker_symbol, name: quote.company_name, last_price: quote.latest_price)
+    begin
+      quote =  client.quote(ticker_symbol)
+      new(ticker: ticker_symbol, name: quote.company_name, last_price: quote.latest_price)
+    rescue => exception
+      return nil
+    end
   end
 end
